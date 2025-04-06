@@ -4,6 +4,12 @@ void add(int index, E obj)
     point of insertion are shifted up. Thus, no elements
     are overwritten.
 
+    List<String> list = new ArrayList<>(List.of("A", "C"));
+    list.add(1, "B");  // Now: ["A", "B", "C"]
+
+    Edge case: Throws IndexOutOfBoundsException if index < 0 or index > list.size().
+
+
 boolean addAll(int index,Collection<? extends E> c
     Inserts all elements of c into the invoking list at the
     index passed in index. Any preexisting elements at or
@@ -11,26 +17,63 @@ boolean addAll(int index,Collection<? extends E> c
     no elements are overwritten. Returns true if the
     invoking list changes and returns false otherwise.
 
+    List<String> list = new ArrayList<>(List.of("A", "E"));
+    list.addAll(1, List.of("B", "C", "D"));  // ["A", "B", "C", "D", "E"]
+
+    Returns: true if the list changed (i.e., collection wasn’t empty), otherwise false.
+
+
 E get(int index)
     Returns the object stored at the specified index
     within the invoking collection.
+
+    List<String> list = List.of("A", "B", "C");
+    System.out.println(list.get(1));  // Output: "B"
+
 
 int indexOf(Object obj)
     Returns the index of the first instance of obj in the
     invoking list. If obj is not an element of the list, –1 is
     returned.
 
+    List<String> list = List.of("A", "B", "C", "B");
+    list.indexOf("B");  // Output: 1
+
+
 int lastIndexOf(Object obj)
     Returns the index of the last instance of obj in the
     invoking list. If obj is not an element of the list, –1 is
     returned
 
+    List<String> list = List.of("A", "B", "C", "B");
+    list.lastIndexOf("B");  // Output: 3
+
+    Also returns -1 if not found.
+
+
 ListIterator<E> listIterator( )
     Returns an iterator to the start of the invoking list
+
+    List<String> list = new ArrayList<>(List.of("A", "B", "C"));
+    ListIterator<String> it = list.listIterator();
+
+    while (it.hasNext()) {
+        System.out.println(it.next());
+    }
+
+    while (it.hasPrevious()) {
+        System.out.println(it.previous());
+    }
+
 
 ListIterator<E> listIterator(int index)
     Returns an iterator to the invoking list that begins at
     the specified index
+
+    List<String> list = List.of("A", "B", "C");
+    ListIterator<String> it = list.listIterator(2);
+    System.out.println(it.next());  // Output: "C"
+
 
 E remove(int index)
     Removes the element at position index from the
@@ -38,20 +81,75 @@ E remove(int index)
     resulting list is compacted. That is, the indexes of
     subsequent elements are decremented by one.
 
+    List<String> list = new ArrayList<>(List.of("A", "B", "C"));
+    String removed = list.remove(1);  // removed = "B"
+    // list = ["A", "C"]
+
+
 default void replaceAll(UnaryOperator<E> opToApply)
     Updates each element in the list with the value
     obtained from the opToApply function. (Added by
     JDK 8.)
 
+    List<String> list = new ArrayList<>(List.of("a", "b"));
+    list.replaceAll(String::toUpperCase);  // ["A", "B"]
+
+    Use case: Functional-style transformation of lists.
+
 E set(int index, E obj)
     Assigns obj to the location specified by index within
     the invoking list. Returns the old value
+
+    List<String> list = new ArrayList<>(List.of("A", "B", "C"));
+    String old = list.set(1, "Z");  // old = "B"
+    // list = ["A", "Z", "C"]
+
 
 default void sort(Comparator<? super E> comp)
     Sorts the list using the comparator specified by comp.
     (Added by JDK 8.)
 
+    List<String> list = new ArrayList<>(List.of("banana", "apple"));
+    list.sort(Comparator.naturalOrder());  // ["apple", "banana"]
+
+
 List<E> subList(int start, int end)
     Returns a list that includes elements from start to
     end–1 in the invoking list. Elements in the returned
     list are also referenced by the invoking object.
+
+    List<String> list = new ArrayList<>(List.of("A", "B", "C", "D"));
+    List<String> sub = list.subList(1, 3);  // ["B", "C"]
+    sub.set(0, "Z");
+    System.out.println(list);  // ["A", "Z", "C", "D"]
+
+    Mutability: Changes in subList affect the original list.
+
+    Edge case: Modifying the original list structurally (like add or remove)
+    while using the subList can cause a ConcurrentModificationException.
+
+
+⚠️ Best Practices & Gotchas
+
+    Method	                                    Caution
+
+    add(index, obj)	                            Index must be within bounds: 0 <= index <= size
+    subList()	                                Don't structurally modify the parent list while using a sublist
+    remove(index)	                            Be careful with shifting indexes after removal
+    replaceAll()	                            Remember: it mutates elements, not returns a new list
+    sort()	                                    It’s in-place; doesn’t return a new sorted list
+
+✅ Summary
+
+    Method	                                    Purpose
+
+    add(int, E)	                                Insert at index
+    addAll(int, Collection)	                    Bulk insert
+    get(int)	                                Access element
+    indexOf / lastIndexOf	                    Find element's position
+    remove(int)	                                Delete by index
+    replaceAll(UnaryOperator)	                Functional transformation
+    set(int, E)	                                Replace value at index
+    sort(Comparator)	                        Sort in-place
+    subList(int, int)	                        Partial view of list
+
