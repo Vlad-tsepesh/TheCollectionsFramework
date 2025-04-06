@@ -1,0 +1,26 @@
+Comparator<? super E> comparator( )
+    Returns the invoking sorted set’s comparator. If the
+    natural ordering is used for this set, null is returned.
+
+E first( )
+    Returns the first element in the invoking sorted set.
+
+SortedSet<E> headSet(E end)
+    Returns a SortedSet containing those elements less
+    than end that are contained in the invoking sorted
+    set. Elements in the returned sorted set are also
+    referenced by the invoking sorted set.
+
+E last( )
+    Returns the last element in the invoking sorted set.
+
+SortedSet<E> subSet(E start, E end)
+    Returns a SortedSet that includes those elements
+    between start and end–1. Elements in the returned
+    collection are also referenced by the invoking object
+
+SortedSet<E> tailSet(E start)
+    Returns a SortedSet that contains those elements
+    greater than or equal to start that are contained in
+    the sorted set. Elements in the returned set are also
+    referenced by the invoking object.
