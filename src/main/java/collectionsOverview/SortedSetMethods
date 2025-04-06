@@ -2,8 +2,19 @@ Comparator<? super E> comparator( )
     Returns the invoking sorted set’s comparator. If the
     natural ordering is used for this set, null is returned.
 
+    SortedSet<String> naturalSet = new TreeSet<>();
+    SortedSet<String> customSet = new TreeSet<>(Comparator.reverseOrder());
+
+    System.out.println(naturalSet.comparator());  // Output: null
+    System.out.println(customSet.comparator());   // Output: java.util.Comparator$$...
+
+
 E first( )
     Returns the first element in the invoking sorted set.
+
+    SortedSet<Integer> set = new TreeSet<>(Arrays.asList(5, 3, 7, 1));
+    System.out.println(set.first());  // Output: 1
+
 
 SortedSet<E> headSet(E end)
     Returns a SortedSet containing those elements less
@@ -11,16 +22,60 @@ SortedSet<E> headSet(E end)
     set. Elements in the returned sorted set are also
     referenced by the invoking sorted set.
 
+    SortedSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5));
+    SortedSet<Integer> head = set.headSet(4);
+    System.out.println(head);  // Output: [1, 2, 3]
+
+
 E last( )
     Returns the last element in the invoking sorted set.
+
+    SortedSet<Integer> set = new TreeSet<>(Arrays.asList(5, 3, 7, 1));
+    System.out.println(set.last());  // Output: 7
+
+    Note: Throws NoSuchElementException if the set is empty.
+
 
 SortedSet<E> subSet(E start, E end)
     Returns a SortedSet that includes those elements
     between start and end–1. Elements in the returned
     collection are also referenced by the invoking object
 
+    SortedSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6));
+    SortedSet<Integer> sub = set.subSet(2, 5);
+    System.out.println(sub);  // Output: [2, 3, 4]
+
+
 SortedSet<E> tailSet(E start)
     Returns a SortedSet that contains those elements
     greater than or equal to start that are contained in
     the sorted set. Elements in the returned set are also
     referenced by the invoking object.
+
+    SortedSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6));
+    SortedSet<Integer> tail = set.tailSet(4);
+    System.out.println(tail);  // Output: [4, 5, 6]
+
+
+⚠️ Common Pitfalls
+    All returned subsets (headSet, subSet, tailSet) are backed views, not copies.
+    Changes in the subset affect the original set.
+
+    If you attempt to add an element outside the range of a subset view, it throws
+    an IllegalArgumentException.
+
+    SortedSet<Integer> set = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5));
+    SortedSet<Integer> subset = set.subSet(2, 4);
+    subset.add(5); // 💥 throws IllegalArgumentException
+
+
+✅ Summary Table
+    Method	                    Returns	                                Notes
+    -----------------------------------------------------------------------------------------
+    comparator()	            Custom comparator or null	            Useful for introspection
+    first()	                    Lowest element	                        Throws if empty
+    last()	                    Highest element                     	Throws if empty
+    headSet(E end)              Elements < end	                        View, not a copy
+    tailSet(E start)	        Elements >= start	                    View, not a copy
+    subSet(E start, E end)	    start <= x < end	                    View, not a copy
+
